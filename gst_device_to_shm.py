@@ -18,11 +18,11 @@ gst_str = "appsrc ! shmsink socket-path=/tmp/foo sync=true wait-for-connection=f
 
 # Check if cap is open
 if cap.isOpened() is not True:
-    print "[ImageWebcamBroadcaster] Cannot open camera. Exiting."
+    print "Cannot open camera. Exiting."
     quit()
 
 # Create videowriter as a SHM sink
-out = cv2.VideoWriter(gst_str, 0, 30, (1920, 1080), True)
+out = cv2.VideoWriter(gst_str, 0, fps, (frame_width, frame_height), True)
 
 # Loop it
 while True:
@@ -35,7 +35,7 @@ while True:
         # Write to SHM
         out.write(frame)
     else:
-        print "[ImageWebcamBroadcaster] Camera error."
+        print "Camera error."
         time.sleep(10)
 
 cap.release()

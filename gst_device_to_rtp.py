@@ -24,7 +24,7 @@ if cap.isOpened() is not True:
     quit()
 
 # Create videowriter as a SHM sink
-out = cv2.VideoWriter(gst_str_rtp, 0, 30, (1920, 1080), True)
+out = cv2.VideoWriter(gst_str_rtp, 0, fps, (frame_width, frame_height), True)
 
 # Loop it
 while True:

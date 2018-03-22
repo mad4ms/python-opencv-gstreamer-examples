@@ -2,6 +2,10 @@ import cv2
 
 # WORKING: cap = cv2.VideoCapture("shmsrc socket-path=/tmp/foo ! video/x-raw, format=BGR ,width=1920,height=1080,framerate=30/1 ! videoconvert ! video/x-raw, format=BGR ! appsink")
 
+fps = 30.
+frame_width = 1920
+frame_height = 1080
+
 # Define the source as shared memory (shmsrc) and point to the socket. !
 # Set the caps (raw (not encoded) frame video/x-raw, format as BGR or RGB (opencv format of grabbed cameras)) and define the properties of the camera !
 # And sink the grabbed data to the appsink
@@ -16,7 +20,7 @@ gst_str_rtp = "appsrc ! videoconvert ! x264enc noise-reduction=10000 tune=zerola
               " ! h264parse ! mpegtsmux ! rtpmp2tpay ! udpsink host=127.0.0.1 port=5000"
 
 # Create videowriter as a RTP sink
-out = cv2.VideoWriter(gst_str_rtp, 0, 30, (1920, 1080), True)
+out = cv2.VideoWriter(gst_str_rtp, 0, fps, (frame_width, frame_height), True)
 
 while True:
 
