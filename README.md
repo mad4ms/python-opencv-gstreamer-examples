@@ -15,7 +15,6 @@ Python examples for grabbing video devices (e.g. webcam, video, ...) and interac
 - [gst_shm_to_app](gst_shm_to_app.py) grabs the shared memory frame from [gst_device_to_shm](gst_device_to_shm.py) and pipes it to a VideoCapture.
 - [gst_device_to_rtp](gst_device_to_rtp.py) grabs the `VideoCapture(0)`,encodes the frame and streams it to `rtp://localhost:5000`
 - [gst_shm_to_rtp](gst_shm_to_rtp.py) grabs the shared memory frame from [gst_device_to_shm](gst_device_to_shm.py) ,encodes the frame and streams it to `rtp://localhost:5000`.
-gst_shm_to_rtp.py
 
 ## Further informations
-Inspired by [https://github.com/tik0/mat2gstreamer]
+Inspired by https://github.com/tik0/mat2gstreamer
