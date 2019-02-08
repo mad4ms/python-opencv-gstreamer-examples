@@ -43,7 +43,7 @@ class SensorFactory(GstRtspServer.RTSPMediaFactory):
         self.launch_string = 'appsrc name=source is-live=true block=true format=GST_FORMAT_TIME ' \
                              'caps=video/x-raw,format=BGR,width=1920,height=1080,framerate=30/1 ' \
                              '! videoconvert ! video/x-raw,format=I420 ' \
-                             '! x264enc speed-preset=ultrafast tune=zerolatency threads=8 ' \
+                             '! x264enc speed-preset=ultrafast tune=zerolatency threads=4 ' \
                              '! rtph264pay config-interval=1 name=pay0 pt=96'
 
     def on_need_data(self, src, lenght):

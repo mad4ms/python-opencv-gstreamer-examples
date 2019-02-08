@@ -3,8 +3,8 @@ import cv2
 
 # Cam properties
 fps = 30.
-frame_width = 1920
-frame_height = 1080
+frame_width = 640
+frame_height = 480
 # Create capture
 cap = cv2.VideoCapture(0)
 
@@ -14,8 +14,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 cap.set(cv2.CAP_PROP_FPS, fps)
 
 # Define the gstreamer sink
-gst_str_rtp = "appsrc ! videoconvert ! x264enc noise-reduction=10000 tune=zerolatency byte-stream=true threads=4 " \
-              " ! h264parse ! mpegtsmux ! rtpmp2tpay ! udpsink host=127.0.0.1 port=5000"
+gst_str_rtp = "appsrc ! videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast ! rtph264pay ! udpsink host=127.0.0.1 port=5000"
 
 
 # Check if cap is open
