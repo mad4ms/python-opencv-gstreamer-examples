@@ -5,14 +5,50 @@
 
 These examples, written in Python, will provide a good starting point for a lot, and the most common, applications of GStreamer and OpenCV. The snippets include following functionalities:
 - Grabbing of standard OpenCV videocapture device
+ ``` python
+ import cv2
+
+# Cam properties
+fps = 30.
+frame_width = 1920
+frame_height = 1080
+# Create capture
+cap = cv2.VideoCapture(0)
+# Set camera properties
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+cap.set(cv2.CAP_PROP_FPS, fps)
+ ```
+
 - Grabbing of v4l2src videocapture device via GStreamer
+ ``` python
+# The following string usually works on most webcams
+webcam2appsink_YUY2_640_480 = "v4l2src device=/dev/video0 ! video/x-raw, format=YUY2, width=640, height=480, pixel-aspect-ratio=1/1, framerate=30/1 ! videoconvert ! appsink"
+ ```
+- Writing of OpenCV frames to shared memory
+ ``` python
+gst_str = "appsrc ! videoconvert ! shmsink socket-path=/tmp/foo sync=true wait-for-connection=false shm-size=10000000"
+ ```
 - Grabbing of shared memory sources
+ ``` python
+cap = cv2.VideoCapture("shmsrc socket-path=/tmp/foo ! video/x-raw, format=BGR, width=640, height=480, pixel-aspect-ratio=1/1, framerate=30/1 ! decodebin ! videoconvert ! appsink")
+ ```
 - Writing of OpenCV frames to shared memory, file and RTP
+ ``` python
+gst_str_rtp = "appsrc ! videoconvert ! x264enc noise-reduction=10000 tune=zerolatency byte-stream=true threads=4 " \
+              " ! h264parse ! mpegtsmux ! rtpmp2tpay ! udpsink host=127.0.0.1 port=5000"
+ ```
 - Usage of hardware acceleration features for encoding and decoding
+ ``` python
+# mfxh264enc does all the HW encoding on the INTEL HD GPU
+appsink2file = "appsrc ! videoconvert ! mfxh264enc ! \
+        video/x-h264, profile=baseline ! \
+        matroskamux ! filesink location=the_gstreamer_enjoyer.mkv"
+ ```
 - Portable to CLI usage
 
 As you are here, you probably know why you want to use GStreamer and OpenCV and I'm not gonna list all the advantages that GStreamer brings to the table.
-**However, if you find this repo helpful or even remotely funny, consider leaving a star.**
+**However, if you find this repo helpful or even remotely funny, consider leaving a star.** Or not. Your choice.
 
 # News
 - 2021-03-23 **Updated README; preparation for nvidia examples**
@@ -33,10 +69,14 @@ As you are here, you probably know why you want to use GStreamer and OpenCV and 
 
 # Prerequisites for HW accelerated encoding/decoding
 
-- _**Intel-CPUs** (Intel Haswell / Broadwell / Skylake with Intel HD / Iris Pro graphics / Apollo Lake) (**>= Gen4**)_
-  - HW H264/H265 encoding and decoding
-  - Bitrate control (CBR, VBR, CQP).
-  - Selectable profiles up to High Profile.
+- _**Intel-CPUs**_
+  - Supported platforms: Intel Haswell / Broadwell / Skylake with Intel HD / Iris Pro graphics / Apollo Lake) (**>= Gen4**)
+  - Noticable features:
+    - HW H264/H265 encoding and decoding
+    - Bitrate control (CBR, VBR, CQP).
+    - Selectable profiles up to High Profile.
+  - Installation process (quite tedious):
+    - 
   - Follow https://github.com/intel/gstreamer-media-SDK to install MSDK and gst-msdk
   - Detailed examples [here](https://github.com/intel/gstreamer-media-SDK/blob/master/README.USAGE)
   - _(not easy to setup, especially with parallel CUDA configuration; be warned)_
