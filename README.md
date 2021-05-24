@@ -50,6 +50,9 @@ appsink2file = "appsrc ! videoconvert ! mfxh264enc ! \
 
 Since you are here, you probably know why you want to use GStreamer and OpenCV and I'm not gonna list all the advantages that GStreamer brings to the table. **However, if you find this repo helpful or even remotely funny, consider leaving a star.** Or not. Your choice.
 
+<p align="center"><img src="https://i.ibb.co/BKxxKc1/image.png" width="400"/></p>
+
+
 # News
 - 2021-03-30 **Updated README; further install instructions; Raspi HW enc pipeline examples incoming**
 - 2021-03-23 **Updated README; preparation for nvidia examples**
