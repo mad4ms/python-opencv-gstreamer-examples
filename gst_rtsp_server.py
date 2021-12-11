@@ -4,11 +4,12 @@ import sys
 import json
 import time
 import signal
+from threading import Thread
 import numpy as np
 
 gi.require_version('Gst', '1.0')
 gi.require_version('GstRtspServer', '1.0')
-from gi.repository import Gst, GstRtspServer, GObject
+from gi.repository import Gst, GstRtspServer, GLib
 
 #cv2.namedWindow('video_realtime_face', cv2.WINDOW_NORMAL)
 
@@ -53,7 +54,7 @@ class SensorFactory(GstRtspServer.RTSPMediaFactory):
                 #cv2.imshow("video_realtime_face", frame)
                 #if cv2.waitKey(1) & 0xFF == ord('q'):
                 #    return
-                data = frame.tostring()
+                data = frame.tobytes()
                 buf = Gst.Buffer.new_allocate(None, len(data), None)
                 buf.fill(0, data)
                 buf.duration = self.duration
@@ -84,15 +85,33 @@ class GstServer(GstRtspServer.RTSPServer):
         self.factory.set_shared(True)
         self.get_mount_points().add_factory("/test", self.factory)
         self.attach(None)
+        self.name = "test"
+        self._stop = False
+
+    def start(self):
+        # start the thread
+        t = Thread(target=self.update, name=self.name, args=())
+        t.daemon = True
+        t.start()
+        Gst.init(None)
+
+        return self
+
+    def update(self):
+        while True:
+            if self._stop:
+                break
+            else:
+                time.sleep(self.factory.duration / Gst.SECOND)
+
+    def stop(self):
+        self._stop = True
 
 
 def run():
-    GObject.threads_init()
-    Gst.init(None)
+    server = GstServer().start()
 
-    server = GstServer()
-
-    loop = GObject.MainLoop()
+    loop = GLib.MainLoop()
     loop.run()
 
 
